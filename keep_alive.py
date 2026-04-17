@@ -8,11 +8,13 @@ def poke_database():
     try:
         supabase: Client = create_client(url, key)
         
-        # 테이블을 조회하지 않고, 서버의 기본 정보(Health Check)만 요청합니다.
-        # 아래 방식은 테이블이 없어도 대답을 주기 때문에 에러가 나지 않습니다.
-        response = supabase.auth.get_session() 
+        # 1. 실제 테이블에서 아주 적은 양의 데이터를 조회합니다.
+        # 'profiles'나 'users' 등 본인의 프로젝트에 실제 존재하는 테이블 이름을 넣으세요.
+        # .limit(1)을 붙여 부하를 최소화합니다.
+        response = supabase.table("players").select("name").limit(1).execute()
         
-        print("Success: 데이터베이스 연결 확인 완료 (Auth Session Check)")
+        print(f"Success: 데이터베이스 쿼리 완료 ({len(response.data)} rows fetched)")
+        
     except Exception as e:
         print(f"Error: {e}")
 
