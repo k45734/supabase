@@ -1,20 +1,24 @@
 import os
-from supabase import create_client, Client
+import requests
 
 def poke_database():
     url = os.environ.get("SUPABASE_URL")
     key = os.environ.get("SUPABASE_KEY")
     
+    # Supabase REST API를 직접 호출하여 데이터 1건 조회
+    # headers에 apikey와 Authorization을 포함해야 합니다.
+    headers = {
+        "apikey": key,
+        "Authorization": f"Bearer {key}"
+    }
+    
+    # 'players' 테이블에서 1건 조회
+    target_url = f"{url}/rest/v1/players?select=name&limit=1"
+    
     try:
-        supabase: Client = create_client(url, key)
-        
-        # 1. 실제 테이블에서 아주 적은 양의 데이터를 조회합니다.
-        # 'profiles'나 'users' 등 본인의 프로젝트에 실제 존재하는 테이블 이름을 넣으세요.
-        # .limit(1)을 붙여 부하를 최소화합니다.
-        response = supabase.table("players").select("name").limit(1).execute()
-        
-        print(f"Success: 데이터베이스 쿼리 완료 ({len(response.data)} rows fetched)")
-        
+        response = requests.get(target_url, headers=headers)
+        response.raise_for_status()
+        print(f"Success: Status Code {response.status_code}")
     except Exception as e:
         print(f"Error: {e}")
 
