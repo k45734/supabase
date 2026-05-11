@@ -22,8 +22,10 @@ def poke_database():
         print("성공: 데이터 삽입 완료 (DB 활성화)")
 
         # 2. 데이터 삭제 (DELETE)
-        # 'id가 null이 아닌 모든 행'이라는 조건을 추가 (neq.null)
-        delete_url = f"{table_url}?id=neq.null" 
+        # 'neq.null' 대신 더 표준적인 'not.is.null' 또는 'gt.0' 등을 사용합니다.
+        # 여기서는 생성 시간이 현재보다 이전인 모든 데이터를 지우도록 설정합니다.
+        delete_url = f"{table_url}?created_at=lt.now%28%29" 
+        
         delete_res = requests.delete(delete_url, headers=headers)
         delete_res.raise_for_status()
         print("성공: 데이터 정리 완료 (Clean up)")
