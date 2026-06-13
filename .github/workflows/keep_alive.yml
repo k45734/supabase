@@ -3,7 +3,7 @@ name: Project Keep Alive
 on:
   schedule:
     # 한국 시간 기준 3일마다 오전 9시경 실행 (UTC 00:00)
-    - cron: '0 0 */3 * *'
+    - cron: '0 */1 * * *'
   workflow_dispatch: # 수동으로도 실행해볼 수 있게 버튼을 만듭니다.
 
 jobs:
